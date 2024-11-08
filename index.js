@@ -37,10 +37,9 @@ app.get("/api/flavors/:id", async (req, res, next) => {
 // POST a new flavor
 app.post("/api/flavors", async (req, res, next) => {
   try {
-    const { name, is_favorite } = req.body;
     const result = await client.query(
       "INSERT INTO flavors (name, is_favorite) VALUES ($1, $2) RETURNING *",
-      [name, is_favorite]
+      [req.body.name, req.body.is_favorite]
     );
     res.send(result.rows[0]);
   } catch (error) {
@@ -51,10 +50,9 @@ app.post("/api/flavors", async (req, res, next) => {
 // PUT to update a flavor by ID
 app.put("/api/flavors/:id", async (req, res, next) => {
   try {
-    const { name, is_favorite } = req.body;
     const result = await client.query(
       "UPDATE flavors SET name = $1, is_favorite=$2, updated_at = now() WHERE id = $3 RETURNING *",
-      [name, is_favorite, req.params.id]
+      [req.body.name, req.body.is_favorite, req.params.id]
     );
     res.send(result.rows[0]);
   } catch (error) {
